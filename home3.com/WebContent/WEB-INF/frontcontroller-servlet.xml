@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.3.xsd
+    http://www.springframework.org/schema/mvc 
+    http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+    
+    <context:component-scan base-package="com.home2.controllers"></context:component-scan>
+   
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/view/"/>
+    <property name="suffix" value=".jsp"/>
+    
+    </bean>
+    
+   
+    <bean id="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+    <property name="url" value="jdbc:oracle:thin:@localhost:1521/root"/>
+    <property name="username" value="system"/>
+    <property name="password" value="rootoracle"/>
+    </bean>
+    
+    
+    <bean id="jt" class="org.springframework.jdbc.core.JdbcTemplate">
+    <property name="dataSource" ref="ds"></property>
+    </bean>
+    
+    <bean id="dao" class="com.home2.controllers.empdao">
+    <property name="tmplate" ref="jt"></property>
+    </bean>
+  
+  
+  <bean id="loginDelegate" class="com.home2.controllers.loginDelegate">
+  <property name="userService" ref="userService"></property>
+  </bean>
+  
+  <bean id="userService" class="com.home2.controllers.userServiceImpl">
+  <property name="userDao" ref="userDao"></property>
+  </bean>
+  
+  
+  <bean id="userDao" class="com.home2.controllers.userDaoImpl">
+  <property name="datasource" ref="ds"></property>
+  </bean>
+  
+  <mvc:resources location="/resource/**" mapping="/WEB-INF/resource/theme/"/>
+  
+  <mvc:annotation-driven/>  
+  
+    </beans>
